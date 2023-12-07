@@ -24,12 +24,13 @@ public class UserController {
 		
 		User userOne = new User(userId, "GP", "123456789");
 		
-		Posts posts = restTemplate.getForObject("http://localhost:8081/post/7",
+		Posts posts = restTemplate.getForObject("http://post-service/post/1",
 				Posts.class);
 		
 		userOne.setPosts(posts);
 		
-		Notifications notifications = restTemplate.getForObject("http://localhost:8082/notification/36",
+		Notifications notifications = restTemplate.getForObject(
+				"http://notification-service/notification/1",
 				Notifications.class);
 		
 		userOne.setNotifications(notifications);
