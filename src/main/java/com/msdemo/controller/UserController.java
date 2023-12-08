@@ -11,6 +11,8 @@ import com.msdemo.model.Notifications;
 import com.msdemo.model.Posts;
 import com.msdemo.model.User;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -18,8 +20,11 @@ public class UserController {
 	@Autowired
 	private RestTemplate restTemplate;
 	
+	public static final String USER_SERVICE = "user-service";
+	
 	
 	@GetMapping(value="/{userId}")
+	@CircuitBreaker(name = USER_SERVICE, fallbackMethod = "userServiceFallBack" )
 	public User getUser(@PathVariable("userId") String userId) {
 		
 		User userOne = new User(userId, "GP", "123456789");
@@ -36,6 +41,12 @@ public class UserController {
 		userOne.setNotifications(notifications);
 		
 		return userOne;
+	}
+	
+	//if post or notification service failed then this response will be returned
+	
+	public User userServiceFallBack(Exception exception) {
+		return new User("1", "Yash Parmar", "62669590987");
 	}
 
 }
